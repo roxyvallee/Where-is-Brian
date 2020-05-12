@@ -55,97 +55,10 @@ function draw() {
     fill(255);
   }
   ellipse(mouseX, mouseY, 80, 80);
-}*/
-
-/*
-let numSegments = 5,
-  x = [],
-  y = [],
-  angle = [],
-  segLength = 26,
-  targetX,
-  targetY,
-  ballX = 50,
-  ballY = 50,
-  ballXDirection = 1,
-  ballYDirection = -1;
-
-for (let i = 0; i < numSegments; i++) {
-  x[i] = 0;
-  y[i] = 0;
-  angle[i] = 0;
-}
-
-function setup() {
-  createCanvas(710, 400);
-  strokeWeight(20);
-  stroke(255, 100);
-  noFill();
-
-  x[x.length - 1] = width / 2; // Set base x-coordinate
-  y[x.length - 1] = height; // Set base y-coordinate
-}
-
-function draw() {
-  background(0);
-
-  strokeWeight(20);
-  //ballX = ballX + 1.0 * ballXDirection;
-  //ballY = ballY + 0.8 * ballYDirection;
-  if (ballX > width - 25 || ballX < 25) {
-    ballXDirection *= -1;
-  }
-  if (ballY > height - 25 || ballY < 25) {
-    ballYDirection *= -1;
-  }
-  ellipse(ballX, ballY, 30, 30);
-
-  reachSegment(0, ballX, ballY);
-  
-  
-  for (let i = 1; i < numSegments; i++) {
-    reachSegment(i, x[i], y[i]);
-  }
-  
-
-  for (let j = x.length - 1; j >= 1; j--) {
-    positionSegment(j, j - 1);
-  }
-  
-  dragSegment(j, mouseX, mouseY);
-
-  for (let k = 0; k < x.length; k++) {
-    segment(x[k], y[k], angle[k], (k + 1) * 2);
-  }
-  
-}
-
-function positionSegment(a, b) {
-  x[b] = x[a] + cos(angle[a]) * segLength;
-  y[b] = y[a] + sin(angle[a]) * segLength;
 }
 
 
 
-function reachSegment(i, xin, yin) {
-  const dx = xin - x[i];
-  const dy = yin - y[i];
-  angle = atan2(dy, dx);
-  targetX = xin - cos(angle) * segLength;
-  targetY = yin - sin(angle) * segLength;
-  segment(x[i], y[i], angle);
-}
-
-function segment(x, y, a) {
-  //strokeWeight(sw);
-  push();
-  translate(x, y);
-  rotate(a);
-  line(0, 0, segLength, 0);
-  pop();
-}
-
-*/
 const arrowLength = 40
 let target
 
@@ -155,12 +68,11 @@ function setup() {
   // ON DECLARE VERS QUEL POINT ON DOIT POINTER
   // --------------------------
   target = createVector(200, 300)
-  img = loadImage('assets/aéroport.png'); // Load the image
+  //
 }
 
 function draw() {
   background(0)
-  image(img, 0,0);
   // dessine le point cible
   noStroke()
   fill(255, 0, 0)
@@ -174,3 +86,71 @@ function draw() {
   strokeWeight(15)
   line(mouseX, mouseY, arrowEnd.x, arrowEnd.y)
 }
+
+*/
+
+
+const arrowW = 200
+const arrowH = 100
+
+let arrowImg
+let target
+
+
+function preload() {
+	arrowImg = loadImage("assets/right-arrow.png")
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight)
+  // --------------------------
+  // ON DECLARE VERS QUEL POINT ON DOIT POINTER
+  // --------------------------
+  button1 = createButton('terminal 1')
+  button2 = createButton('terminal 2')
+  button1.position(20,20)
+  button2.position(20,60)
+  target = createVector(width*0.6, height*0.55)
+  button1.mousePressed(positionTerminal1)
+  button2.mousePressed(positionTerminal2)
+
+}
+
+
+function positionTerminal1()
+{
+  target.x = width*0.9
+  target.y = height*0.2
+}
+
+function positionTerminal2()
+{
+  target.x = width*0.2
+  target.y = height*0.9
+}
+
+function draw() {
+  background(255)
+  // dessine le point cible
+  noStroke()
+  fill(255, 0, 0)
+  ellipse(target.x, target.y, 15, 15)
+
+  // Calcule la direction entre la souris et la cible
+  const mouse = createVector(mouseX, mouseY)
+  const dir = p5.Vector.sub(target, mouse).normalize()
+  const angle = dir.heading()
+  
+  if(mouseX == target.x & mouseY == target.y)
+  {
+    greeting = createElement('h2', 'Bien arrivé !');
+    greeting.position(100, 60);
+  }
+  // Dessine l'image
+	push()
+		translate(mouseX, mouseY)
+		rotate(angle)
+		image(arrowImg, 0, -arrowH/2, arrowW/2, arrowH)
+	pop()
+}
+
